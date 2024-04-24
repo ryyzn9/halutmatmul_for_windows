@@ -29,11 +29,11 @@
 
 the only change code is maddness.py
 
-'''bash
+```bash
 process = psutil.Process()
 memory_info = process.memory_info()
 max_memory = memory_info.rss # Resident Set Size (RSS) is used as an
-'''
+```
 
 </div>
 ## Paper
