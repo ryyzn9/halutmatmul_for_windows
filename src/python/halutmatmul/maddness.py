@@ -4,7 +4,7 @@
 # some changes have been done to the original code
 # also explaining comments have been added
 
-import resource
+import psutil 
 import copy
 from typing import List, Optional, Union, Tuple
 import numpy as np
@@ -523,10 +523,12 @@ def init_and_learn_hash_function(
                 all_prototypes[c, b] = centroid
 
         # X_error = A_input - all_centroids
-        ram_usage = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+        process = psutil.Process()
+        memory_info = process.memory_info()
+        max_memory = memory_info.rss  # Resident Set Size (RSS) is used as an approximation of memory usage
         print(
             f"Learning progress {X.shape}-{C}-{K}: {c + 1}/{C} "
-            f"({(ram_usage / (1024 * 1024)):.3f} GB)"
+            f"({(max_memory / (1024 * 1024)):.3f} GB)"
         )
     return X_error, all_splits, all_prototypes, all_buckets
 
@@ -576,10 +578,13 @@ def learn_proto_and_hash_function(
     # print("X_error mse / X mse after lstsq: ", mse_res / msv_orig)
     mse_res = mse_error
 
-    ram_usage = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+    process = psutil.Process()
+    memory_info = process.memory_info()
+    max_memory = memory_info.rss  # Resident Set Size (RSS) is used as an approximation of memory usage
+    
     print(
         f"After Ridge regression {X.shape}-{C}-{K}"
-        f"({(ram_usage / (1024 * 1024)):.3f} GB)"
+        f"({(max_memory / (1024 * 1024)):.3f} GB)"
     )
     report_array = np.array(
         [
@@ -589,7 +594,7 @@ def learn_proto_and_hash_function(
             np.mean(X_orig),
             mse_res,
             mse_res / msv_orig,
-            ram_usage / (1024 * 1024),
+            max_memory / (1024 * 1024),
         ]
     )
     return all_splits_np, all_prototypes, report_array, thresholds, dims

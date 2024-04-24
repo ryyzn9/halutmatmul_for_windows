@@ -13,7 +13,7 @@ dependencies:
   - pre-commit
   - pytest-xdist
   # algo dependencies
-  - numpy=1.21.2
+  - numpy=1.24
   - numba
   - joblib
   - scipy
@@ -32,9 +32,10 @@ dependencies:
   - seaborn
   - matplotlib
   # for CI
+  - psutil
   - mypy>=1.4.1
   # kmeans
-  - faiss-cpu=1.7.3 # https://github.com/facebookresearch/faiss/issues/2890
+  - faiss-cpu=>1.7.3 # https://github.com/facebookresearch/faiss/issues/2890
   # ci
   - pytest-split
   - pip:

@@ -1,17 +1,21 @@
 <div align="center">
 
 # Stella Nera: A halutmatmul based Accelerator
+
 </div>
 
 <div align="center">
 
 ### Algorithmic CI
+
 [![PyTorch Layer Test | PyTest](https://github.com/joennlae/halutmatmul/actions/workflows/python_testing.yaml/badge.svg)](https://github.com/joennlae/halutmatmul/actions/workflows/python_testing.yaml)
 [![Python Linting](https://github.com/joennlae/halutmatmul/actions/workflows/linting.yaml/badge.svg)](https://github.com/joennlae/halutmatmul/actions/workflows/linting.yaml)
 [![Mypy - Typechecking](https://github.com/joennlae/halutmatmul/actions/workflows/python_typing.yaml/badge.svg)](https://github.com/joennlae/halutmatmul/actions/workflows/python_typing.yaml)
 
 ### ML CI
+
 [![ResNet9 - 92%+ accuracy](https://github.com/joennlae/halutmatmul/actions/workflows/resnet9_validation.yaml/badge.svg)](https://github.com/joennlae/halutmatmul/actions/workflows/resnet9_validation.yaml)
+
 ### Hardware CI
 
 [![HW Synth + PAR OpenROAD](https://github.com/joennlae/halutmatmul/actions/workflows/hw_openroad.yaml/badge.svg)](https://github.com/joennlae/halutmatmul/actions/workflows/hw_openroad.yaml)
@@ -20,28 +24,37 @@
 
 </div>
 
+<div>
+## Note : official code is only for unix users,
+
+the only change code is maddness.py
+
+'''bash
+process = psutil.Process()
+memory_info = process.memory_info()
+max_memory = memory_info.rss # Resident Set Size (RSS) is used as an
+'''
+
+</div>
 ## Paper
 
-* [Stella Nera: Achieving 161 TOp/s/W with Multiplier-free DNN Acceleration based on Approximate Matrix Multiplication](https://arxiv.org/abs/2311.10207)
+- [Stella Nera: Achieving 161 TOp/s/W with Multiplier-free DNN Acceleration based on Approximate Matrix Multiplication](https://arxiv.org/abs/2311.10207)
 
 ### Abstract
 
-
-*The recent Maddness method approximates Matrix Multiplication (MatMul) without the need for multiplication by using a hash-based version of product quantization (PQ). The hash function is a decision tree, allowing for efficient hardware implementation, as multiply-accumulate operations are replaced by decision tree passes and LUT lookups. Stella Nera is the first Maddness accelerator achieving 15x higher area efficiency (GMAC/s/mm^2) and 25x higher energy efficiency (TMAC/s/W) than direct MatMul accelerators in the same technology. In a commercial 14 nm technology and scaled to 3 nm, we achieve an energy efficiency of 161 TOp/s/W@0.55V with a Top-1 accuracy on CIFAR-10 of over 92.5% using ResNet9.*
-
+_The recent Maddness method approximates Matrix Multiplication (MatMul) without the need for multiplication by using a hash-based version of product quantization (PQ). The hash function is a decision tree, allowing for efficient hardware implementation, as multiply-accumulate operations are replaced by decision tree passes and LUT lookups. Stella Nera is the first Maddness accelerator achieving 15x higher area efficiency (GMAC/s/mm^2) and 25x higher energy efficiency (TMAC/s/W) than direct MatMul accelerators in the same technology. In a commercial 14 nm technology and scaled to 3 nm, we achieve an energy efficiency of 161 TOp/s/W@0.55V with a Top-1 accuracy on CIFAR-10 of over 92.5% using ResNet9._
 
 # Algorithmic - Maddness
 
 ![Maddness Animation](/docs/images/maddness_animation.webp)
 
-
 ### ResNet-9 LUTs, Thresholds, Dims
 
-* [Download 92%+ Model](https://iis-people.ee.ethz.ch/~janniss/resnet9-best-int8.pth)
+- [Download 92%+ Model](https://iis-people.ee.ethz.ch/~janniss/resnet9-best-int8.pth)
 
 ### Halutmatmul example
 
-* [example.py](src/python/example.py)
+- [example.py](src/python/example.py)
 
 ```python
 import numpy as np
@@ -74,6 +87,7 @@ conda env create -f environment_gpu.yml --prefix /scratch/janniss/conda/halutmat
 ```
 
 ### Differentiable Maddness
+
 <div align="center">
 <img src="docs/images/code_preview.png" alt="Differentiable Maddness" width="600"> 
 </div>
@@ -82,30 +96,30 @@ conda env create -f environment_gpu.yml --prefix /scratch/janniss/conda/halutmat
 
 All completely open hardware results are NOT OPTIMIZED! The results are only for reference and to show the flow works. In the paper results from commercial tools are shown. See this as a community service to make the hardware results more accessible.
 
-| All Designs    |  NanGate45      |
-| -------------  |  -------------  |
-| All Report     | [All](https://github.com/joennlae/halutmatmul-openroad-reports/tree/main/latest/nangate45)  |
-| History        | [History](https://github.com/joennlae/halutmatmul-openroad-reports/tree/main/history/nangate45)  |
-
+| All Designs | NanGate45                                                                                       |
+| ----------- | ----------------------------------------------------------------------------------------------- |
+| All Report  | [All](https://github.com/joennlae/halutmatmul-openroad-reports/tree/main/latest/nangate45)      |
+| History     | [History](https://github.com/joennlae/halutmatmul-openroad-reports/tree/main/history/nangate45) |
 
 #### Open Hardware Results Table
-| NanGate45      |  halut_matmul  |  halut_encoder_4  |  halut_decoder  |
-| -------------  |  -------------  |  -------------  |  -------------  |
-| Area [μm^2]    |  128816 |  46782  |  24667.5  | 
-| Freq [Mhz]     |  166.7 |  166.7  |  166.7  |
-| GE             |  161.423 kGE | 58.624 kGE  |  30.911 kGE  |
-| Std Cell [#]   |  65496 |  23130  |  12256  |
-| Voltage [V]    |   1.1             | 1.1             | 1.1             |
-| Util [%]       |  50.4 |  48.7  |  52.1  |
-| TNS            |  0 |  0  |  0  |
-| Clock Net      | <img src="https://raw.githubusercontent.com/joennlae/halutmatmul-openroad-reports/main/latest/nangate45/halut_matmul/reports/final_clocks.webp" alt="Clock Net" width="150">  | <img src="https://raw.githubusercontent.com/joennlae/halutmatmul-openroad-reports/main/latest/nangate45/halut_encoder_4/reports/final_clocks.webp" alt="Clock Net" width="150">  | <img src="https://raw.githubusercontent.com/joennlae/halutmatmul-openroad-reports/main/latest/nangate45/halut_decoder/reports/final_clocks.webp" alt="Clock Net" width="150">  |
-| Routing        | <img src="https://raw.githubusercontent.com/joennlae/halutmatmul-openroad-reports/main/latest/nangate45/halut_matmul/reports/final_routing.webp" alt="Routing" width="150">   | <img src="https://raw.githubusercontent.com/joennlae/halutmatmul-openroad-reports/main/latest/nangate45/halut_encoder_4/reports/final_routing.webp" alt="Routing" width="150">   | <img src="https://raw.githubusercontent.com/joennlae/halutmatmul-openroad-reports/main/latest/nangate45/halut_decoder/reports/final_routing.webp" alt="Routing" width="150">   |
-| GDS            | [GDS Download](https://raw.githubusercontent.com/joennlae/halutmatmul-openroad-reports/main/latest/nangate45/halut_matmul/results/6_final.gds)  | [GDS Download](https://raw.githubusercontent.com/joennlae/halutmatmul-openroad-reports/main/latest/nangate45/halut_encoder_4/results/6_final.gds)  | [GDS Download](https://raw.githubusercontent.com/joennlae/halutmatmul-openroad-reports/main/latest/nangate45/halut_decoder/results/6_final.gds)  |
 
+| NanGate45    | halut_matmul                                                                                                                                                                 | halut_encoder_4                                                                                                                                                                 | halut_decoder                                                                                                                                                                 |
+| ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Area [μm^2]  | 128816                                                                                                                                                                       | 46782                                                                                                                                                                           | 24667.5                                                                                                                                                                       |
+| Freq [Mhz]   | 166.7                                                                                                                                                                        | 166.7                                                                                                                                                                           | 166.7                                                                                                                                                                         |
+| GE           | 161.423 kGE                                                                                                                                                                  | 58.624 kGE                                                                                                                                                                      | 30.911 kGE                                                                                                                                                                    |
+| Std Cell [#] | 65496                                                                                                                                                                        | 23130                                                                                                                                                                           | 12256                                                                                                                                                                         |
+| Voltage [V]  | 1.1                                                                                                                                                                          | 1.1                                                                                                                                                                             | 1.1                                                                                                                                                                           |
+| Util [%]     | 50.4                                                                                                                                                                         | 48.7                                                                                                                                                                            | 52.1                                                                                                                                                                          |
+| TNS          | 0                                                                                                                                                                            | 0                                                                                                                                                                               | 0                                                                                                                                                                             |
+| Clock Net    | <img src="https://raw.githubusercontent.com/joennlae/halutmatmul-openroad-reports/main/latest/nangate45/halut_matmul/reports/final_clocks.webp" alt="Clock Net" width="150"> | <img src="https://raw.githubusercontent.com/joennlae/halutmatmul-openroad-reports/main/latest/nangate45/halut_encoder_4/reports/final_clocks.webp" alt="Clock Net" width="150"> | <img src="https://raw.githubusercontent.com/joennlae/halutmatmul-openroad-reports/main/latest/nangate45/halut_decoder/reports/final_clocks.webp" alt="Clock Net" width="150"> |
+| Routing      | <img src="https://raw.githubusercontent.com/joennlae/halutmatmul-openroad-reports/main/latest/nangate45/halut_matmul/reports/final_routing.webp" alt="Routing" width="150">  | <img src="https://raw.githubusercontent.com/joennlae/halutmatmul-openroad-reports/main/latest/nangate45/halut_encoder_4/reports/final_routing.webp" alt="Routing" width="150">  | <img src="https://raw.githubusercontent.com/joennlae/halutmatmul-openroad-reports/main/latest/nangate45/halut_decoder/reports/final_routing.webp" alt="Routing" width="150">  |
+| GDS          | [GDS Download](https://raw.githubusercontent.com/joennlae/halutmatmul-openroad-reports/main/latest/nangate45/halut_matmul/results/6_final.gds)                               | [GDS Download](https://raw.githubusercontent.com/joennlae/halutmatmul-openroad-reports/main/latest/nangate45/halut_encoder_4/results/6_final.gds)                               | [GDS Download](https://raw.githubusercontent.com/joennlae/halutmatmul-openroad-reports/main/latest/nangate45/halut_decoder/results/6_final.gds)                               |
 
 #### Full design (halutmatmul)
 
 Run locally with:
+
 ```bash
 git submodule update --init --recursive
 cd hardware
@@ -114,9 +128,8 @@ ACC_TYPE=INT DATA_WIDTH=8 NUM_M=8 NUM_DECODER_UNITS=4 NUM_C=16 make halut-open-s
 
 ### References
 
-* [arXiv](https://arxiv.org/abs/2106.10860) Maddness paper
-* Based on [MADDness/Bolt](https://github.com/dblalock/bolt).
-
+- [arXiv](https://arxiv.org/abs/2106.10860) Maddness paper
+- Based on [MADDness/Bolt](https://github.com/dblalock/bolt).
 
 ## Citation
 
